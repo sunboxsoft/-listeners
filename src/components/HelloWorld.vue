@@ -1,34 +1,63 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-<child-f @jiaguoqiang="HF" @onFun="onFun"></child-f>
+    <child-f @jiaguoqiang="HF" @onFun="onFun"></child-f>
+
+    <student v-for="(item, index) in students" :key="item.id" :record="item">
+
+      <template #default="scope">
+        <!-- {{ index }}--{{ item.name }}=={{ item.num }} -->
+        {{ scope.age }}-{{item.num}}-{{ index }}
+        <student-c :num="item.num" @defineFun="defineFun($event, item)"></student-c>
+      </template>
+    </student>
   </div>
 </template>
 
 <script>
 import ChildF from './children/ChildF.vue'
+import Student from './children/Student.vue'
+import StudentC from './children/StudentC.vue'
 export default {
   name: 'HelloWorld',
-  data () {
+  data() {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to Your Vue.js App',
+      students: [{
+        id: 101,
+        name: 'jiaguoqiang',
+        age: 40,
+        num: 0
+      },
+      {
+        id: 102,
+        name: 'jiajindian',
+        age: 10,
+        num: 3
+      }
+      ]
     }
   },
-  components:{
-    ChildF
+  components: {
+    ChildF,
+    Student,
+    StudentC
   },
-  created(){
-this.$on('onFun',this.onFun)
+  created() {
   },
-  mounted(){
-    
+  mounted() {
+    console.log(this.$slots, 'this.$slots')
   },
-  methods:{
-    HF(){
-      console.log(arguments,arguments[0],' HF(){')
+
+  methods: {
+    HF() {
+      console.log(arguments, arguments[0], ' HF(){')
     },
-    onFun(){
-      console.log(arguments[0],'onFUn')
+    onFun() {
+      console.log(arguments[0], 'onFUn')
+    },
+    defineFun(e, item) {
+      item.num = e
     }
   }
 }
@@ -36,17 +65,21 @@ this.$on('onFun',this.onFun)
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
+h1,
+h2 {
   font-weight: normal;
 }
+
 ul {
   list-style-type: none;
   padding: 0;
 }
+
 li {
   display: inline-block;
   margin: 0 10px;
 }
+
 a {
   color: #42b983;
 }
